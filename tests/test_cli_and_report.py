@@ -160,6 +160,43 @@ def test_report_analysis_handles_missing_results_and_clear_winner() -> None:
     assert "Fact Coverage" in winner["failure"]
 
 
+def test_report_analysis_identifies_weakest_quality_component() -> None:
+    analysis = _analysis(
+        {
+            "strategy_summary": {
+                "A": {
+                    "overall_average_score": 0.9,
+                    "metric_averages": {
+                        "fact_coverage_score": 1.0,
+                        "tone_match_score": 1.0,
+                        "professional_quality_score": 0.7,
+                    },
+                },
+                "B": {
+                    "overall_average_score": 0.8,
+                    "metric_averages": {
+                        "fact_coverage_score": 1.0,
+                        "tone_match_score": 1.0,
+                        "professional_quality_score": 0.4,
+                    },
+                },
+            },
+            "records": [
+                {
+                    "strategy": "B",
+                    "scores": {
+                        "professional_structure_score": 1.0,
+                        "professional_placeholder_score": 0.8,
+                        "professional_concision_score": 0.2,
+                    },
+                }
+            ],
+        }
+    )
+    assert "concision" in analysis["failure"]
+    assert "0.200" in analysis["failure"]
+
+
 @pytest.mark.parametrize(
     ("error", "expected"),
     [

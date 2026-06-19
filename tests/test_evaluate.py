@@ -7,6 +7,7 @@ import pytest
 from src.config import Settings
 from src.evaluate import (
     aggregate_results,
+    calculate_automated_quality_score,
     calculate_scores,
     evaluate_email,
     run_evaluation,
@@ -33,12 +34,44 @@ def judge_result() -> JudgeResult:
     )
 
 
+def scoring_scenario() -> Scenario:
+    return Scenario(
+        id="scoring",
+        intent="Send an update",
+        key_facts=["Launch is Friday."],
+        tone="formal",
+        human_reference_email=(
+            "Subject: Update\n\nHello team,\n\nLaunch is Friday.\n\n"
+            "Best regards,\n[Your Name]"
+        ),
+    )
+
+
 def test_calculate_scores_uses_defined_metric_logic() -> None:
-    scores = calculate_scores(judge_result())
+    scenario = scoring_scenario()
+    scores = calculate_scores(
+        judge_result(),
+        scenario,
+        scenario.human_reference_email,
+    )
     assert scores.fact_coverage_score == pytest.approx(0.375)
     assert scores.tone_match_score == pytest.approx(0.75)
+    assert scores.professional_structure_score == pytest.approx(1.0)
+    assert scores.professional_placeholder_score == pytest.approx(1.0)
+    assert scores.professional_concision_score == pytest.approx(1.0)
+    assert scores.professional_quality_automated_score == pytest.approx(1.0)
     assert scores.professional_quality_score == pytest.approx(1.0)
     assert scores.overall_score == pytest.approx((0.375 + 0.75 + 1.0) / 3)
+
+
+def test_automated_quality_penalizes_extra_placeholders_and_verbosity() -> None:
+    scenario = scoring_scenario()
+    generated = (
+        "Subject: Update\n\nDear [Recipient Name],\n\n"
+        + "This is a deliberately verbose sentence. " * 20
+        + "\n\nBest regards,\n[Your Name]\n[Your Title]"
+    )
+    assert calculate_automated_quality_score(scenario, generated) <= 0.6
 
 
 def test_validate_judge_result_rejects_missing_fact_index() -> None:
@@ -65,7 +98,11 @@ def test_calculate_scores_requires_at_least_one_fact() -> None:
     result = judge_result()
     result.fact_assessments = []
     with pytest.raises(ValueError, match="At least one"):
-        calculate_scores(result)
+        calculate_scores(
+            result,
+            scoring_scenario(),
+            scoring_scenario().human_reference_email,
+        )
 
 
 def test_evaluate_email_documents_judge_configuration() -> None:
@@ -86,7 +123,7 @@ def test_evaluate_email_documents_judge_configuration() -> None:
         client, settings, scenario, "ADVANCED-EMAIL"
     )
     assert result.fact_assessments[0].fact_index == 0
-    assert scores.overall_score == 1
+    assert scores.overall_score == pytest.approx(17 / 18)
     assert metadata.provider == "gemini"
 
 

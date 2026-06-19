@@ -6,6 +6,7 @@ import argparse
 import csv
 import json
 import logging
+import re
 from collections.abc import Iterable
 from datetime import datetime, timezone
 from pathlib import Path
@@ -32,6 +33,7 @@ from src.models import EvaluationScores, JudgeResult, Scenario, Strategy
 from src.prompts import build_judge_prompt
 
 LOGGER = logging.getLogger(__name__)
+SCORING_VERSION = 3
 
 METRIC_DEFINITIONS: dict[str, dict[str, str]] = {
     "fact_coverage": {
@@ -57,8 +59,14 @@ METRIC_DEFINITIONS: dict[str, dict[str, str]] = {
             "Measures professionalism, clarity, concision, formatting, and fluency."
         ),
         "logic": (
-            "The LLM judge scores subject line, greeting, coherent body, concision, "
-            "closing, and grammar from 1-5. Python normalizes with (raw - 1) / 4."
+            "Python averages two components: the normalized 1-5 LLM quality rubric "
+            "and an automated email-quality score. The automated score equally "
+            "weights structural completeness (subject, greeting, closing), "
+            "placeholder discipline, and concision relative to the human reference. "
+            "Extra bracketed placeholders beyond [Your Name] reduce the placeholder "
+            "component by 0.1 each, to a 0.5 floor. Concision receives 1.0, 0.75, "
+            "0.5, 0.25, or 0.0 when generated/reference word-count ratio is at most "
+            "1.25, 1.5, 1.75, 2.0, or above 2.0 respectively."
         ),
     },
 }
@@ -113,7 +121,72 @@ def validate_judge_result(result: JudgeResult, fact_count: int) -> JudgeResult:
     return result
 
 
-def calculate_scores(judge_result: JudgeResult) -> EvaluationScores:
+def _word_count(text: str) -> int:
+    return len(re.findall(r"\b\w+[\w'-]*\b", text))
+
+
+def calculate_automated_quality_components(
+    scenario: Scenario,
+    generated_email: str,
+) -> tuple[float, float, float]:
+    """Score structure, placeholder discipline, and reference-relative concision."""
+    lines = [line.strip() for line in generated_email.splitlines() if line.strip()]
+    has_subject = any(line.lower().startswith("subject:") for line in lines[:2])
+    has_greeting = any(
+        re.match(
+            r"^(dear|hello|hi|good (morning|afternoon|evening))\b",
+            line,
+            flags=re.IGNORECASE,
+        )
+        for line in lines
+    )
+    has_closing = any(
+        re.match(
+            r"^(best regards|regards|sincerely|kind regards|warm regards|"
+            r"professional regards|thank you)[,.]?$",
+            line,
+            flags=re.IGNORECASE,
+        )
+        for line in lines
+    )
+    structure_score = mean([has_subject, has_greeting, has_closing])
+
+    extra_placeholders = [
+        placeholder
+        for placeholder in re.findall(r"\[[^\]]+\]", generated_email)
+        if placeholder.casefold() != "[your name]"
+    ]
+    placeholder_score = max(0.5, 1.0 - 0.1 * len(extra_placeholders))
+
+    reference_words = max(1, _word_count(scenario.human_reference_email))
+    word_ratio = _word_count(generated_email) / reference_words
+    if word_ratio <= 1.25:
+        concision_score = 1.0
+    elif word_ratio <= 1.5:
+        concision_score = 0.75
+    elif word_ratio <= 1.75:
+        concision_score = 0.5
+    elif word_ratio <= 2.0:
+        concision_score = 0.25
+    else:
+        concision_score = 0.0
+
+    return structure_score, placeholder_score, concision_score
+
+
+def calculate_automated_quality_score(
+    scenario: Scenario,
+    generated_email: str,
+) -> float:
+    """Return the mean of the deterministic professional-quality components."""
+    return mean(calculate_automated_quality_components(scenario, generated_email))
+
+
+def calculate_scores(
+    judge_result: JudgeResult,
+    scenario: Scenario,
+    generated_email: str,
+) -> EvaluationScores:
     """Calculate the three normalized metrics and per-email overall score."""
     if not judge_result.fact_assessments:
         raise ValueError("At least one fact assessment is required.")
@@ -121,12 +194,34 @@ def calculate_scores(judge_result: JudgeResult) -> EvaluationScores:
         FACT_CREDITS[assessment.status] for assessment in judge_result.fact_assessments
     )
     tone_score = normalize_five_point_score(judge_result.tone_score)
-    quality_score = normalize_five_point_score(judge_result.professional_quality_score)
+    quality_judge_score = normalize_five_point_score(
+        judge_result.professional_quality_score
+    )
+    (
+        quality_structure_score,
+        quality_placeholder_score,
+        quality_concision_score,
+    ) = calculate_automated_quality_components(
+        scenario,
+        generated_email,
+    )
+    quality_automated_score = mean(
+        [
+            quality_structure_score,
+            quality_placeholder_score,
+            quality_concision_score,
+        ]
+    )
+    quality_score = mean([quality_judge_score, quality_automated_score])
     return EvaluationScores(
         fact_coverage_score=fact_score,
         tone_raw_score=judge_result.tone_score,
         tone_match_score=tone_score,
         professional_quality_raw_score=judge_result.professional_quality_score,
+        professional_structure_score=quality_structure_score,
+        professional_placeholder_score=quality_placeholder_score,
+        professional_concision_score=quality_concision_score,
+        professional_quality_automated_score=quality_automated_score,
         professional_quality_score=quality_score,
         overall_score=mean([fact_score, tone_score, quality_score]),
     )
@@ -147,7 +242,11 @@ def evaluate_email(
         response_model=JudgeResult,
         validator=lambda result: validate_judge_result(result, len(scenario.key_facts)),
     )
-    return response.value, calculate_scores(response.value), response.metadata
+    return (
+        response.value,
+        calculate_scores(response.value, scenario, generated_email),
+        response.metadata,
+    )
 
 
 def _empty_record(
@@ -174,6 +273,7 @@ def _empty_record(
         "generation_error": None,
         "judge_result": None,
         "scores": None,
+        "scoring_version": SCORING_VERSION,
         "evaluation_error": None,
     }
 
@@ -288,6 +388,7 @@ def run_evaluation(
 ) -> dict[str, Any]:
     """Generate, judge, aggregate, and persist the full comparison."""
     scenarios = load_scenarios(scenarios_path)
+    scenarios_by_id = {scenario.id: scenario for scenario in scenarios}
     generator = EmailGenerator(client, settings)
     destination = Path(output_dir)
     generated_at_utc = datetime.now(timezone.utc).isoformat()
@@ -343,6 +444,16 @@ def run_evaluation(
                 record["judge_result"] = None
                 record["scores"] = None
                 record["evaluation_error"] = None
+            elif record.get("scoring_version") != SCORING_VERSION:
+                judge_result = JudgeResult.model_validate(record["judge_result"])
+                scenario = scenarios_by_id[record["scenario_id"]]
+                scores = calculate_scores(
+                    judge_result,
+                    scenario,
+                    record["generated_email"],
+                )
+                record["scores"] = scores.model_dump()
+                record["scoring_version"] = SCORING_VERSION
         generated_at_utc = existing.get("generated_at_utc", generated_at_utc)
         LOGGER.info("Loaded %s saved records for resume.", len(existing_records))
 
@@ -374,6 +485,7 @@ def run_evaluation(
             effective_status = "completed_with_fallback"
         return {
             "project_title": "Email Generation Assistant",
+            "scoring_version": SCORING_VERSION,
             "generated_at_utc": generated_at_utc,
             "run_status": effective_status,
             "stopped_early_reason": stopped_early_reason,
@@ -471,6 +583,7 @@ def run_evaluation(
                 )
                 record["judge_result"] = judge_result.model_dump()
                 record["scores"] = scores.model_dump()
+                record["scoring_version"] = SCORING_VERSION
                 _apply_metadata(record, judge_metadata, judge=True)
             except DailyQuotaExceeded as exc:
                 record["evaluation_error"] = str(exc)
@@ -554,6 +667,10 @@ def write_evaluation_outputs(
         "tone_raw_score",
         "tone_match_score",
         "professional_quality_raw_score",
+        "professional_structure_score",
+        "professional_placeholder_score",
+        "professional_concision_score",
+        "professional_quality_automated_score",
         "professional_quality_score",
         "overall_score",
         "fact_assessments",
@@ -590,6 +707,18 @@ def write_evaluation_outputs(
                     "tone_match_score": scores.get("tone_match_score"),
                     "professional_quality_raw_score": scores.get(
                         "professional_quality_raw_score"
+                    ),
+                    "professional_structure_score": scores.get(
+                        "professional_structure_score"
+                    ),
+                    "professional_placeholder_score": scores.get(
+                        "professional_placeholder_score"
+                    ),
+                    "professional_concision_score": scores.get(
+                        "professional_concision_score"
+                    ),
+                    "professional_quality_automated_score": scores.get(
+                        "professional_quality_automated_score"
                     ),
                     "professional_quality_score": scores.get(
                         "professional_quality_score"

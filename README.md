@@ -5,7 +5,7 @@ an intent, required key facts, and a requested tone. It also compares an advance
 prompt against a baseline prompt across 10 fixed scenarios using three custom,
 email-specific metrics.
 
-Repository: [ScarletMcLearn/email-generation-assistant](https://github.com/ScarletMcLearn/email-generation-assistant)
+Repository: [ScarletMcLearn/AI-Email-Agent](https://github.com/ScarletMcLearn/AI-Email-Agent)
 
 The production route uses GroqCloud first and automatically falls back to Google
 Gemini after retryable failures. Groq hosts open-weight models; GroqCloud itself
@@ -246,8 +246,19 @@ The final normalized score is `(raw - 1) / 4`.
 
 ### 3. Professional Email Quality Score
 
-The judge scores subject line, greeting, body coherence, concision, closing, and
-grammar/fluency from 1-5. The score is normalized with `(raw - 1) / 4`.
+This hybrid metric averages:
+
+- the judge's normalized 1-5 assessment of subject, greeting, body coherence,
+  concision, closing, and grammar/fluency; and
+- an automated score that equally weights structural completeness, placeholder
+  discipline, and concision relative to the human reference email.
+
+The automated component requires a subject, greeting, and closing; reduces its
+placeholder subscore by `0.1` for each bracketed placeholder beyond
+`[Your Name]`, with a `0.5` floor; and uses fixed word-count ratio bands from
+`1.0` at no more than `1.25x` the reference length to `0.0` above `2.0x`.
+This makes unnecessary verbosity and unresolved template fields measurable
+instead of relying only on a broad LLM quality rating.
 
 The overall score for a valid result is the unweighted mean of the three
 normalized metrics. Strategy averages exclude failed records and always report

@@ -2,10 +2,9 @@
 
 Generated: 2026-06-19T08:44:18.338574+00:00
 
-Generation model: `gemini-2.5-flash`  
-Judge model: `gemini-2.5-flash-lite`
-
-> **Incomplete evaluation warning:** 17 scenario-strategy result(s) failed. Averages exclude failed records; consult the raw results for errors.
+Provider order: `gemini`  
+Primary generation: `gemini` / `gemini-3.1-flash-lite-preview`  
+Primary judge: `gemini` / `gemini-3-flash-preview`
 
 ## Prompt Template - Strategy A
 
@@ -114,50 +113,58 @@ Return the email only.
 
 **Definition:** Measures professionalism, clarity, concision, formatting, and fluency.
 
-**Logic:** The LLM judge scores subject line, greeting, coherent body, concision, closing, and grammar from 1-5. Python normalizes with (raw - 1) / 4.
+**Logic:** Python averages two components: the normalized 1-5 LLM quality rubric and an automated email-quality score. The automated score equally weights structural completeness (subject, greeting, closing), placeholder discipline, and concision relative to the human reference. Extra bracketed placeholders beyond [Your Name] reduce the placeholder component by 0.1 each, to a 0.5 floor. Concision receives 1.0, 0.75, 0.5, 0.25, or 0.0 when generated/reference word-count ratio is at most 1.25, 1.5, 1.75, 2.0, or above 2.0 respectively.
 
 ## Strategy Averages
 
 | Strategy | Evaluated | Errors | Fact Coverage | Tone Match | Professional Quality | Overall |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 2/10 | 8 | 1.000 | 1.000 | 1.000 | 1.000 |
-| B | 1/10 | 9 | 1.000 | 1.000 | 1.000 | 1.000 |
+| A | 10/10 | 0 | 1.000 | 1.000 | 0.912 | 0.971 |
+| B | 10/10 | 0 | 1.000 | 1.000 | 0.803 | 0.934 |
 
 ## Raw Evaluation Results
 
-| Scenario | Strategy | Fact Coverage | Tone (raw/norm) | Quality (raw/norm) | Overall | Error |
-|---|:---:|---:|---:|---:|---:|---|
-| meeting-follow-up | A | 1.000 | 5/5 (1.000) | 5/5 (1.000) | 1.000 |  |
-| meeting-follow-up | B | 1.000 | 5/5 (1.000) | 5/5 (1.000) | 1.000 |  |
-| proposal-details-request | A | 1.000 | 5/5 (1.000) | 5/5 (1.000) | 1.000 |  |
-| proposal-details-request | B | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| delayed-response-apology | A | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| delayed-response-apology | B | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| urgent-deadline-reminder | A | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| urgent-deadline-reminder | B | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| empathetic-support-reply | A | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| empathetic-support-reply | B | N/A | N/A | N/A | N/A | Daily free-tier request quota exhausted for this model. |
-| sales-outreach | A | N/A | N/A | N/A | N/A |  |
-| sales-outreach | B | N/A | N/A | N/A | N/A |  |
-| project-status-update | A | N/A | N/A | N/A | N/A |  |
+| Scenario | Strategy | Generation | Judge | Fact Coverage | Tone (raw/norm) | Quality (raw/norm) | Overall | Error |
+|---|:---:|---|---|---:|---:|---:|---:|---|
+| meeting-follow-up | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.958) | 0.986 |  |
+| meeting-follow-up | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.833) | 0.944 |  |
+| proposal-details-request | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.942) | 0.981 |  |
+| proposal-details-request | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.767) | 0.922 |  |
+| delayed-response-apology | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.917) | 0.972 |  |
+| delayed-response-apology | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.783) | 0.928 |  |
+| urgent-deadline-reminder | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (1.000) | 1.000 |  |
+| urgent-deadline-reminder | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.917) | 0.972 |  |
+| empathetic-support-reply | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.875) | 0.958 |  |
+| empathetic-support-reply | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.800) | 0.933 |  |
+| sales-outreach | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.842) | 0.947 |  |
+| sales-outreach | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.800) | 0.933 |  |
+| project-status-update | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.875) | 0.958 |  |
+| project-status-update | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.783) | 0.928 |  |
+| meeting-reschedule | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.875) | 0.958 |  |
+| meeting-reschedule | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.800) | 0.933 |  |
+| invoice-follow-up | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.875) | 0.958 |  |
+| invoice-follow-up | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.800) | 0.933 |  |
+| interview-invitation | A | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.958) | 0.986 |  |
+| interview-invitation | B | gemini / gemini-3.1-flash-lite-preview | gemini / gemini-3-flash-preview | 1.000 | 5/5 (1.000) | 5/5 (0.750) | 0.917 |  |
 
 ## Comparative Analysis
 
 ### Which strategy performed better?
 
-The evaluated results are tied at 1.000. They do not establish a better strategy.
+Strategy A performed better with an overall average of 0.971, compared with 0.934 for Strategy B.
 
 ### Biggest failure mode of the lower-performing strategy
 
-There is no lower-performing strategy in the available scores. Complete the failed cases before drawing a failure-mode conclusion.
+The largest measured weakness of Strategy B was Professional Quality, its lowest average metric at 0.803. Within that hybrid metric, concision was the weakest automated component at 0.050.
 
 ### Production recommendation
 
-Do not make a data-based production selection from this tie. Complete the evaluation, then compare the full metric averages and judge rationales.
+Recommend Strategy A for production because it achieved the stronger aggregate result under the same scenarios, model, judge, and metric definitions. Retain monitoring for fact fidelity and review the recommendation whenever the prompt or model changes.
 
 ## Notes and Limitations
 
 - LLM-as-a-judge scores may vary despite a temperature of 0.0.
 - Free-tier availability and rate limits can change.
+- Mixed-provider runs are flagged and should not be treated as fully controlled comparisons.
 - Human review remains necessary for sensitive or high-impact emails.
 - This report can be regenerated as Markdown and PDF with `pixi run report`.

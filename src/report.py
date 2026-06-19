@@ -163,6 +163,38 @@ def _analysis(data: dict[str, Any]) -> dict[str, str]:
             else float("inf")
         ),
     )
+    failure_detail = (
+        f"{lowest_label}, its lowest average metric at {loser_metrics[lowest_key]:.3f}."
+    )
+    if lowest_key == "professional_quality_score":
+        component_keys = [
+            ("professional_structure_score", "email structure"),
+            ("professional_placeholder_score", "placeholder discipline"),
+            ("professional_concision_score", "concision"),
+        ]
+        loser_records = [
+            record
+            for record in data.get("records", [])
+            if record.get("strategy") == loser_key and record.get("scores")
+        ]
+        component_averages = {
+            key: sum(record["scores"][key] for record in loser_records)
+            / len(loser_records)
+            for key, _ in component_keys
+            if loser_records
+            and all(key in record["scores"] for record in loser_records)
+        }
+        if component_averages:
+            component_key, component_label = min(
+                component_keys,
+                key=lambda item: component_averages.get(item[0], float("inf")),
+            )
+            failure_detail = (
+                f"{lowest_label}, its lowest average metric at "
+                f"{loser_metrics[lowest_key]:.3f}. Within that hybrid metric, "
+                f"{component_label} was the weakest automated component at "
+                f"{component_averages[component_key]:.3f}."
+            )
     mixed_provider = bool(data.get("fallback_used"))
     recommendation_basis = (
         "The comparison includes fallback calls, so confirm the result with a "
@@ -183,9 +215,7 @@ def _analysis(data: dict[str, Any]) -> dict[str, str]:
         ),
         "failure": (
             f"The largest measured weakness of Strategy {loser_key} was "
-            f"{lowest_label}, its lowest average metric at "
-            f"{loser_metrics[lowest_key]:.3f}. Review the corresponding raw judge "
-            "rationales to distinguish recurring omissions from isolated cases."
+            f"{failure_detail}"
         ),
         "recommendation": (recommendation_basis),
     }
