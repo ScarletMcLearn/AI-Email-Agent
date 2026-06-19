@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+pytest-cache-files-*/
+.coverage
+htmlcov/
+
+# Final assessment artifacts are intentionally versioned in outputs/.
+
+# Local rendering and test artifacts.
+tmp/

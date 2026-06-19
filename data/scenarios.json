@@ -1,0 +1,122 @@
+[
+  {
+    "id": "meeting-follow-up",
+    "intent": "Follow up after a quarterly planning meeting",
+    "key_facts": [
+      "Thank everyone for attending the meeting on June 16.",
+      "Department budget proposals are due by June 24.",
+      "Priya will combine the proposals into the final operating plan.",
+      "The next review meeting is scheduled for June 29 at 10:00 AM."
+    ],
+    "tone": "warm and professional",
+    "human_reference_email": "Subject: Follow-Up on Quarterly Planning\n\nHello everyone,\n\nThank you for attending our quarterly planning meeting on June 16. Please send your department budget proposals by June 24 so Priya can combine them into the final operating plan. Our next review meeting is scheduled for June 29 at 10:00 AM.\n\nBest regards,\n[Your Name]"
+  },
+  {
+    "id": "proposal-details-request",
+    "intent": "Request clarification and missing details for a vendor proposal",
+    "key_facts": [
+      "Ask for an itemized implementation cost.",
+      "Request the proposed project timeline and major milestones.",
+      "Ask whether 24-hour support is included in the quoted price.",
+      "Request a response by July 2."
+    ],
+    "tone": "formal and direct",
+    "human_reference_email": "Subject: Request for Additional Proposal Details\n\nDear vendor team,\n\nThank you for submitting your proposal. Before we complete our review, please provide an itemized implementation cost, the proposed project timeline with major milestones, and confirmation of whether 24-hour support is included in the quoted price. We would appreciate receiving these details by July 2.\n\nSincerely,\n[Your Name]"
+  },
+  {
+    "id": "delayed-response-apology",
+    "intent": "Apologize to a customer for a delayed response to a support request",
+    "key_facts": [
+      "The response was delayed because the ticket was routed to the wrong support queue.",
+      "The ticket is now assigned to a senior support engineer.",
+      "The customer will receive a technical update within four business hours.",
+      "Acknowledge the inconvenience caused by the delay."
+    ],
+    "tone": "empathetic and accountable",
+    "human_reference_email": "Subject: Our Apology and Update on Your Support Request\n\nDear customer,\n\nI apologize for the delay and the inconvenience it caused. Your ticket was mistakenly routed to the wrong support queue. It is now assigned to a senior support engineer, and you will receive a technical update within four business hours.\n\nSincerely,\n[Your Name]"
+  },
+  {
+    "id": "urgent-deadline-reminder",
+    "intent": "Remind project owners about an urgent compliance deadline",
+    "key_facts": [
+      "All evidence files must be uploaded by 5:00 PM on June 22.",
+      "Three control owners still have incomplete submissions.",
+      "Missing the deadline may delay the external audit.",
+      "Ask recipients to report blockers to Marcus immediately."
+    ],
+    "tone": "urgent, concise, and professional",
+    "human_reference_email": "Subject: Urgent: Compliance Evidence Due June 22 at 5:00 PM\n\nHello team,\n\nAll compliance evidence files must be uploaded by 5:00 PM on June 22. Three control owners still have incomplete submissions, and missing the deadline may delay the external audit. If you have a blocker, report it to Marcus immediately.\n\nRegards,\n[Your Name]"
+  },
+  {
+    "id": "empathetic-support-reply",
+    "intent": "Respond to a customer whose account was temporarily locked",
+    "key_facts": [
+      "Acknowledge that the customer could not access the account for two hours.",
+      "The account has been unlocked.",
+      "No customer data was lost or changed.",
+      "Offer a call with the support team if the customer needs help signing in."
+    ],
+    "tone": "empathetic, reassuring, and professional",
+    "human_reference_email": "Subject: Your Account Access Has Been Restored\n\nDear customer,\n\nI understand how frustrating it was to be unable to access your account for two hours. Your account has now been unlocked, and no customer data was lost or changed. If you need any help signing in, we would be glad to arrange a call with our support team.\n\nWarm regards,\n[Your Name]"
+  },
+  {
+    "id": "sales-outreach",
+    "intent": "Introduce an analytics product to a prospective retail client",
+    "key_facts": [
+      "The platform consolidates sales and inventory data into one dashboard.",
+      "A similar retailer reduced weekly reporting time by 40 percent.",
+      "Offer a 20-minute product demonstration next week.",
+      "Do not claim that the product guarantees revenue growth."
+    ],
+    "tone": "confident, concise, and consultative",
+    "human_reference_email": "Subject: Simplifying Retail Sales and Inventory Reporting\n\nHello,\n\nOur analytics platform consolidates sales and inventory data into one dashboard. A similar retailer reduced weekly reporting time by 40 percent after adopting it. If improving reporting efficiency is a priority, I would be happy to arrange a 20-minute product demonstration next week.\n\nBest,\n[Your Name]"
+  },
+  {
+    "id": "project-status-update",
+    "intent": "Send a weekly project status update to stakeholders",
+    "key_facts": [
+      "The data migration is 85 percent complete.",
+      "User acceptance testing begins on June 25.",
+      "A supplier delay creates a two-day risk to the reporting module.",
+      "The team is using a backup supplier to protect the launch date."
+    ],
+    "tone": "clear, factual, and confident",
+    "human_reference_email": "Subject: Weekly Project Status Update\n\nHello stakeholders,\n\nThe data migration is now 85 percent complete, and user acceptance testing begins on June 25. A supplier delay creates a two-day risk to the reporting module; however, the team is using a backup supplier to protect the launch date.\n\nBest regards,\n[Your Name]"
+  },
+  {
+    "id": "meeting-reschedule",
+    "intent": "Reschedule a client meeting because of an unavoidable conflict",
+    "key_facts": [
+      "The original meeting is Friday, June 26 at 2:00 PM.",
+      "Offer Monday, June 29 at 11:00 AM or 3:00 PM as alternatives.",
+      "The agenda remains the contract renewal and service roadmap.",
+      "Apologize for the inconvenience."
+    ],
+    "tone": "polite and apologetic",
+    "human_reference_email": "Subject: Request to Reschedule Our June 26 Meeting\n\nDear client,\n\nI apologize for the inconvenience, but an unavoidable conflict requires me to reschedule our meeting on Friday, June 26 at 2:00 PM. Would Monday, June 29 at either 11:00 AM or 3:00 PM work for you? The agenda will remain the contract renewal and service roadmap.\n\nKind regards,\n[Your Name]"
+  },
+  {
+    "id": "invoice-follow-up",
+    "intent": "Follow up on an overdue invoice without damaging the client relationship",
+    "key_facts": [
+      "Invoice INV-2048 for $4,750 was due on June 10.",
+      "Ask the client to confirm the payment status.",
+      "Offer to resend the invoice or supporting documents.",
+      "Ask the client to flag any billing discrepancy."
+    ],
+    "tone": "courteous, firm, and professional",
+    "human_reference_email": "Subject: Payment Status for Invoice INV-2048\n\nDear client,\n\nI am following up on invoice INV-2048 for $4,750, which was due on June 10. Please confirm the payment status when convenient. I can resend the invoice or any supporting documents, and please let me know if you have identified a billing discrepancy.\n\nBest regards,\n[Your Name]"
+  },
+  {
+    "id": "interview-invitation",
+    "intent": "Invite a candidate to a technical interview",
+    "key_facts": [
+      "The interview is for the AI Engineer position.",
+      "The interview will last 60 minutes over Google Meet.",
+      "Offer June 30 at 9:00 AM or July 1 at 1:30 PM.",
+      "The interview includes a system design discussion and a short Python exercise."
+    ],
+    "tone": "welcoming and professional",
+    "human_reference_email": "Subject: Invitation to Interview for the AI Engineer Position\n\nDear candidate,\n\nWe would like to invite you to a 60-minute Google Meet interview for the AI Engineer position. The interview will include a system design discussion and a short Python exercise. Please let us know whether June 30 at 9:00 AM or July 1 at 1:30 PM works better for you.\n\nBest regards,\n[Your Name]"
+  }
+]

@@ -1,0 +1,33 @@
+[workspace]
+name = "email-generation-assistant"
+version = "1.0.0"
+description = "Generate and evaluate professional emails with Groq and Gemini."
+authors = ["AI Engineer Candidate"]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+[dependencies]
+python = ">=3.10,<3.14"
+uv = ">=0.8"
+
+# Pixi resolves and installs these PyPI packages through uv.
+[pypi-dependencies]
+google-genai = ">=1.20.0,<2.0.0"
+groq = ">=0.30.0,<1.0.0"
+python-dotenv = ">=1.0.0,<2.0.0"
+pydantic = ">=2.7.0,<3.0.0"
+reportlab = ">=4.2.0,<5.0.0"
+pytest = ">=8.2.0,<9.0.0"
+pytest-cov = ">=6.0.0,<8.0.0"
+ruff = ">=0.12.0,<1.0.0"
+
+[tasks]
+app = { cmd = "uv run --no-cache python -m src.cli", description = "Run the interactive email assistant." }
+evaluate = { cmd = "uv run --no-cache python -m src.evaluate", description = "Generate and evaluate both strategies." }
+evaluate-resume = { cmd = "uv run --no-cache python -m src.evaluate --resume", description = "Resume an interrupted evaluation from saved checkpoints." }
+report = { cmd = "uv run --no-cache python -m src.report", description = "Build Markdown and PDF reports." }
+test = { cmd = "uv run --no-cache pytest", description = "Run the offline test suite." }
+lint = { cmd = "uv run --no-cache ruff check src tests", description = "Lint Python source and tests." }
+format = { cmd = "uv run --no-cache ruff format src tests", description = "Format Python source and tests." }
+format-check = { cmd = "uv run --no-cache ruff format --check src tests", description = "Check Python formatting." }
+verify = { depends-on = ["test", "lint", "format-check"], description = "Run all offline verification." }

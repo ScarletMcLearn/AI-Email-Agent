@@ -1,0 +1,130 @@
+[project]
+name = "email-generation-assistant"
+version = "1.0.0"
+description = "Generate and evaluate professional emails with Groq and Gemini."
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "google-genai>=1.20.0,<2.0.0",
+    "groq>=0.30.0,<1.0.0",
+    "pydantic>=2.7.0,<3.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+    "reportlab>=4.2.0,<5.0.0",
+]
+
+[tool.ruff]
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.pytest.ini_options]
+addopts = "-p no:cacheprovider -p no:tmpdir --cov=src --cov-branch --cov-report=term-missing --cov-fail-under=95"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
+skip_covered = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2.0,<9.0.0",
+    "pytest-cov>=6.0.0,<8.0.0",
+    "ruff>=0.12.0,<1.0.0",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812",
+    "COM819",
+    "D206",
+    "D203",
+    "D213",
+    "D300",
+    "E111",
+    "E114",
+    "E117",
+    "ISC001",
+    "ISC002",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "W191",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/cli.py" = ["D103", "T201", "TC003", "TRY300"]
+"src/config.py" = ["EM101", "TRY003"]
+"src/evaluate.py" = [
+    "ANN401",
+    "BLE001",
+    "C901",
+    "EM101",
+    "EM102",
+    "PERF203",
+    "PLC0415",
+    "PLR2004",
+    "PLR0912",
+    "PLR0915",
+    "TRY003",
+    "TRY004",
+    "TRY400",
+    "D103",
+    "E501",
+    "TC003",
+    "TRY300",
+]
+"src/generator.py" = ["D102", "D107", "EM101", "TC001", "TRY003"]
+"src/llm_client.py" = [
+    "ANN401",
+    "BLE001",
+    "EM101",
+    "EM102",
+    "N818",
+    "PERF203",
+    "PLC0415",
+    "PLR0913",
+    "TRY003",
+    "TRY300",
+    "TRY400",
+    "D107",
+    "TC001",
+    "TC003",
+]
+"src/models.py" = ["D102", "EM101", "TRY003"]
+"src/report.py" = [
+    "ANN401",
+    "D103",
+    "E501",
+    "EM101",
+    "EM102",
+    "PLC0415",
+    "PLR2004",
+    "TRY003",
+    "TRY300",
+    "TRY400",
+]
+"tests/**/*.py" = [
+    "ANN001",
+    "ANN003",
+    "ANN201",
+    "ANN401",
+    "ARG002",
+    "ARG005",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D107",
+    "EM101",
+    "PLR2004",
+    "PT011",
+    "PT018",
+    "PLC0415",
+    "S101",
+    "TRY003",
+]

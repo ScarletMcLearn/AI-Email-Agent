@@ -1,0 +1,231 @@
+{
+  "generated_at_utc": "2026-06-19T08:44:18.338574+00:00",
+  "provider_order": [
+    "gemini"
+  ],
+  "generation_provider": "gemini",
+  "generation_model": "gemini-3.5-flash",
+  "fallback_used": false,
+  "emails": [
+    {
+      "scenario_id": "meeting-follow-up",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": "Email generation failed across all providers: gemini: Gemini email generation failed after 3 attempts: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "scenario_id": "meeting-follow-up",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash",
+      "attempts": 3,
+      "fallback_used": false,
+      "email": "Subject: Follow-Up: Quarterly Planning Meeting & Next Steps\n\nDear Team,\n\nThank you all for your active participation and valuable contributions during our quarterly planning meeting on June 16. It was great collaborating with everyone as we align on our goals for the upcoming quarter. \n\nAs a next step, please ensure that your department budget proposals are submitted by Friday, June 24. Once all submissions are in, Priya will combine the proposals into our final operating plan. \n\nWe will reconvene to review the consolidated plan at our next meeting, which is scheduled for June 29 at 10:00 AM. \n\nThank you again for your hard work and dedication to this process. Please let me know if you have any questions in the meantime.\n\nBest regards,\n\n[Your Name]  \n[Your Title]",
+      "error": null
+    },
+    {
+      "scenario_id": "proposal-details-request",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": "Email generation failed across all providers: gemini: Gemini email generation failed after 3 attempts: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "scenario_id": "proposal-details-request",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "delayed-response-apology",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "delayed-response-apology",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "urgent-deadline-reminder",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "urgent-deadline-reminder",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "empathetic-support-reply",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "empathetic-support-reply",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "sales-outreach",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "sales-outreach",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "project-status-update",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "project-status-update",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "meeting-reschedule",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "meeting-reschedule",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "invoice-follow-up",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "invoice-follow-up",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "interview-invitation",
+      "strategy": "A",
+      "strategy_label": "Strategy A (advanced)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    },
+    {
+      "scenario_id": "interview-invitation",
+      "strategy": "B",
+      "strategy_label": "Strategy B (baseline)",
+      "provider": null,
+      "model": "gemini-3.5-flash",
+      "attempts": null,
+      "fallback_used": false,
+      "email": null,
+      "error": null
+    }
+  ]
+}
